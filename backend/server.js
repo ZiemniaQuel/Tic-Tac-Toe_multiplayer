@@ -4,24 +4,21 @@ const socketIo = require('socket.io');
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIo(server);
-const cors = require('cors');
-app.use(cors());
-app.get('/', (req, res) => {
-  res.send('<h1>Hello world</h1>');
+const io = socketIo(server, {
+  cors: {
+    origin: "http://localhost:5173", // Specify the React app's origin
+    methods: ["GET", "POST"],
+  },
 });
 
 io.on('connection', (socket) => {
-  console.log('a user connected');
+  console.log('A user connected');
+  
   socket.on('disconnect', () => {
-    console.log('user disconnected');
+    console.log('User disconnected');
   });
 });
 
-app.get('/api/test', (req, res) => {
-    res.json({ message: 'Backend is working!' });
-  });
-
 server.listen(3000, () => {
-  console.log('listening on *:3000');
+  console.log('Listening on port 3000');
 });

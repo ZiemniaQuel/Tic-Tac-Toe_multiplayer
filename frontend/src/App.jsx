@@ -1,17 +1,24 @@
-import { useEffect } from 'react'
-import './App.css'
+import { useEffect } from 'react';
+import io from 'socket.io-client';
 
 function App() {
   useEffect(() => {
-    fetch('http://localhost:3000/api/test')
-      .then(response => response.json())
-      .then(data => console.log(data))
-      .catch(error => console.error('Error fetching data: ', error));
+    // Connect to the Express server
+    const socket = io('http://localhost:3000');
+
+    socket.on('connect', () => {
+      console.log('Connected to server');
+    });
+
+    // Cleanup on component unmount
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   return (
     <div className="App">
-      <h1>Tic Tac Toe</h1>
+      <h1>Socket.io with React</h1>
     </div>
   );
 }
